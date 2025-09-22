@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opensearch-dashboard
+  namespace: ctbc-yaml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opensearch-dashboard
+  template:
+    metadata:
+      labels:
+        app: opensearch-dashboard
+    spec:
+      containers:
+      - name: opensearch-dashboard
+        image: opensearchproject/opensearch-dashboards:3.2.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5601
+          name: http
+        env:
+        - name: OPENSEARCH_HOSTS
+          value: "http://opensearch:9200"
+        - name: DISABLE_SECURITY_DASHBOARDS_PLUGIN
+          value: "true"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/opensearch-dashboards/config/opensearch_dashboards.yml
+          subPath: opensearch_dashboards.yml
+      volumes:
+      - name: config
+        configMap:
+          name: opensearch-dashboard-config

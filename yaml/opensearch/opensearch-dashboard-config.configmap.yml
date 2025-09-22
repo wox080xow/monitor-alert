@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-dashboard-config
+  namespace: ctbc-yaml
+data:
+  opensearch_dashboards.yml: |
+    server.name: opensearch-dashboard
+    server.host: 0.0.0.0
+    opensearch.hosts: [http://opensearch:9200]
+    opensearch.ssl.verificationMode: none
+    opensearch.username: admin
+    opensearch.password: admin
+    opensearch.requestHeadersWhitelist: [authorization, securitytenant]
+    opensearch_security.multitenancy.enabled: false
+    opensearch_security.readonly_mode.roles: [kibana_read_only]
+    server.ssl.enabled: false
+
